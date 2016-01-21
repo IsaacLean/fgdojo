@@ -29,12 +29,12 @@ class UserEndpoint(webapp2.RequestHandler):
     # Create new user
     def post(self):
       email = self.request.get('email')
-      pwHash = self.request.get('pwHash')
+      pw = self.request.get('pw')
       tag = self.request.get('tag')
       realName = self.request.get('realName')
 
       # TODO: check if tag or email already exists
-      pwHash = User.createPwHash(pwHash)
+      pwHash = User.createPwHash(pw)
 
       newUser = User(email=email, pwHash=pwHash, tag=tag, realName=realName)
       newUser.put()

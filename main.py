@@ -6,6 +6,7 @@ from controller.user import UserEndpoint
 from controller.user import UserDebugHandler
 from controller.login import LoginEndpoint
 from controller.login import LoginDebugHandler
+from controller.login import SessionDebugHandler
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
@@ -13,5 +14,6 @@ app = webapp2.WSGIApplication([
     ('/user/([0-9]+)', UserEndpoint),
     ('/user/debug', UserDebugHandler),
     ('/login', LoginEndpoint),
-    ('/login/debug', LoginDebugHandler)
+    ('/login/debug', LoginDebugHandler),
+    ('/login/debug2', SessionDebugHandler)
 ], debug=True)
