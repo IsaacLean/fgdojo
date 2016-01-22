@@ -1,0 +1,6 @@
+{
+    "default_line_ending": "unix",
+    "folder_exclude_patterns": [".git", "node_modules"],
+    "tab_size": 4,
+    "translate_tabs_to_spaces": true,
+}
