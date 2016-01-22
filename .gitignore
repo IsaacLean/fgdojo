@@ -1,5 +1,6 @@
 node_modules/
 static/
+view/templates-min/
 *.map
 *.pyc
 auth.py
