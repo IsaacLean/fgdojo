@@ -1,4 +1,7 @@
 node_modules/
+static/
+*.map
 *.pyc
 auth.py
 config.py
+Thumbs.db
