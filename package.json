@@ -1,0 +1,24 @@
+{
+  "name": "fgdojo",
+  "version": "0.0.0",
+  "description": "",
+  "main": "main.py",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IsaacLean/fgdojo.git"
+  },
+  "author": "Matthew \"Isaac\" Lean",
+  "bugs": {
+    "url": "https://github.com/IsaacLean/fgdojo/issues"
+  },
+  "homepage": "https://github.com/IsaacLean/fgdojo#readme",
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-sass": "^2.1.1"
+  }
+}
