@@ -15,21 +15,21 @@ gulp.task('default', ['styles', 'lint', 'watch']);
 
 gulp.task('lint', function() {
     return gulp.src([JS_LOC])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failOnError())
-        .pipe(gulp.dest('./static'));
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failOnError())
+    .pipe(gulp.dest('./static'));
 });
 
 // Recompile Sass into CSS & auto-prefix it
 gulp.task('styles', function() {
     gulp.src(SASS_LOC)
-        .pipe(sass())
-        .pipe(autoprefixer({
-            browser: ['last 2 versions']
-        }))
-        .pipe(gulp.dest('./static'))
-        .pipe(browserSync.stream());
+    .pipe(sass())
+    .pipe(autoprefixer({
+        browser: ['last 2 versions']
+    }))
+    .pipe(gulp.dest('./static'))
+    .pipe(browserSync.stream());
 });
 
 // Auto-recompile Sass files on save, then live reload HTML & CSS in browser
