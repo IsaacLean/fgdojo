@@ -5,14 +5,15 @@ import webapp2
 from env import JINJA_ENV
 from model.user import User
 
+
 # /user
 class UserEndpoint(webapp2.RequestHandler):
     # Read user data with ID
     def get(self, id=None):
-        if id != None:
+        if id is not None:
             user = User.get_by_id(int(id))
 
-            if user != None:
+            if user is not None:
                 response = {
                     'tag': user.email,
                     'realName': user.realName
@@ -38,6 +39,7 @@ class UserEndpoint(webapp2.RequestHandler):
 
         newUser = User(email=email, pwHash=pwHash, tag=tag, realName=realName)
         newUser.put()
+
 
 # Render view for endpoint testing
 class UserDebugHandler(webapp2.RequestHandler):

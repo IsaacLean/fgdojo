@@ -6,6 +6,7 @@ from auth import verifySecureCookie
 from env import JINJA_ENV
 from model.user import User
 
+
 # /login
 class LoginEndpoint(webapp2.RequestHandler):
     # Login
@@ -24,11 +25,13 @@ class LoginEndpoint(webapp2.RequestHandler):
         else:
             self.error(404)
 
+
 # Render view for endpoint testing
 class LoginDebugHandler(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENV.get_template('logindebug.html')
         self.response.write(template.render())
+
 
 class SessionDebugHandler(webapp2.RequestHandler):
     def get(self):
