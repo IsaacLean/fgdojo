@@ -1,93 +1,107 @@
-/*eslint-env node*/
-
 var gulp = require('gulp');
+var argv = require('yargs').argv;
 var autoprefixer = require('gulp-autoprefixer');
 var browserSync = require('browser-sync').create();
-var concat = require('gulp-concat');
+// var concat = require('gulp-concat');
 var eslint = require('gulp-eslint');
 var htmlmin = require('gulp-htmlmin');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var rename = require('gulp-rename');
 var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
+// var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
+var webpack = require('gulp-webpack');
 
-var TEMPLATE_SRC = './view/templates/*.html';
-var TEMPLATE_DEST = './view/templates-min';
-var SASS_SRC = './view/sass/**/*.scss';
-var SASS_DEST = './static/css';
-var JS_SRC = './view/js/**/*.js';
-var JS_DEST = './static/js';
-var IMG_SRC = './view/img/*';
-var IMG_DEST = './static/img';
+
+var PATH = {
+    root: './',
+    templateWatch: './view/templates/*.html',
+    templateDest: './view/templates-min',
+    sassWatch: './view/sass/**/*.scss',
+    sassDest: './static/css',
+    jsWatch: './view/js/**/*.js',
+    jsDest: './static/js',
+    imgWatch: './view/img/*',
+    imgDest: './static/img'
+};
+
 
 // Setup styles, scripts & images once then watch
-gulp.task('default', ['setup-styles', 'setup-scripts', 'setup-images', 'watch']);
+gulp.task('default', ['templates', 'styles', 'scripts', 'images', 'watch']);
 
-// Minify templates
-gulp.task('setup-templates-min', function() {
-    return gulp.src(TEMPLATE_SRC)
+/*
+ * [ gulp templates ]
+ * Minifies templates' HTML
+ */
+gulp.task('templates', function() {
+    return gulp.src(PATH.templateWatch)
         .pipe(htmlmin({collapseWhitespace: true}))
-        .pipe(gulp.dest(TEMPLATE_DEST));
+        .pipe(gulp.dest(PATH.templateDest));
 });
 
-// Recompile Sass into CSS, auto-prefix it & inject into browser
-gulp.task('setup-styles', function() {
-    gulp.src(SASS_SRC)
-        .pipe(sass())
-        .pipe(autoprefixer({
-            browser: ['last 2 versions']
-        }))
-        .pipe(gulp.dest(SASS_DEST))
+/*
+ * [ gulp styles ]
+ * Compile Sass into CSS, auto-prefix it & inject into browser
+ * --min: Minfies CSS
+ */
+gulp.task('styles', function() {
+    var data = gulp.src(PATH.sassWatch);
+
+    if(argv.min === undefined) {
+        data = data.pipe(sass());
+    } else {
+        data = data.pipe(sass({outputStyle: 'compressed'}))
+            .pipe(rename({extname: '.min.css'}));
+    }
+
+    return data.pipe(autoprefixer({browser: ['last 2 versions']}))
+        .pipe(gulp.dest(PATH.sassDest))
         .pipe(browserSync.stream());
 });
 
-// Same as 'setup-styles' except minifies
-gulp.task('setup-styles-min', function() {
-    gulp.src(SASS_SRC)
-        .pipe(sass({outputStyle: 'compressed'}))
-        .pipe(autoprefixer({
-            browser: ['last 2 versions']
-        }))
-        .pipe(rename({extname: '.min.css'}))
-        .pipe(gulp.dest(SASS_DEST))
-        .pipe(browserSync.stream());
+
+/* 
+ * [ gulp scripts ]
+ * Run ESLint and compile JS with webpack
+ * --nolint: Skips ESLint
+ * --min: Uglifies JS
+ */
+gulp.task('scripts', function() {
+    // TODO: get sourcemaps working with webpack
+    var data = gulp.src([PATH.jsWatch]);
+
+    if(argv.nolint === undefined) {
+        data = data.pipe(eslint())
+            .pipe(eslint.format())
+            .pipe(eslint.failOnError());
+    }
+        
+    data = data.pipe(webpack(require('./webpack.config.js')));
+
+    if(argv.min !== undefined) {
+        data = data.pipe(uglify())
+            .pipe(rename({extname: '.min.js'}));
+    }
+
+    return data.pipe(gulp.dest(PATH.root));
 });
 
-// Run ESLint and concatenate all JS files
-gulp.task('setup-scripts', function() {
-    return gulp.src([JS_SRC])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failOnError())
-        .pipe(concat('all.js'))
-        .pipe(gulp.dest(JS_DEST));
+// Used for 'gulp watch'.
+// Triggers BrowserSync reload after 'gulp scripts' completes during 'gulp watch'.
+gulp.task('scripts-watch', ['scripts'], function() {
+    browserSync.reload();
 });
 
-
-// Same as 'setup-scripts' except minifies
-gulp.task('setup-scripts-min', function() {
-    return gulp.src([JS_SRC])
-        .pipe(sourcemaps.init())
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failOnError())
-        .pipe(concat('all.js'))
-        .pipe(uglify())
-        .pipe(rename({extname: '.min.js'}))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(JS_DEST));
-});
 
 // Compress JPEG & PNG images
-gulp.task('setup-images', function() {
-    return gulp.src(IMG_SRC)
+gulp.task('images', function() {
+    return gulp.src(PATH.imgWatch)
         .pipe(imagemin({
             progressive: true,
             use: [pngquant()]
         }))
-        .pipe(gulp.dest(IMG_DEST));
+        .pipe(gulp.dest(PATH.imgDest));
 });
 
 // Watch any changes in templates, Sass, JS & images and update if changes occur
@@ -97,11 +111,11 @@ gulp.task('watch', function() {
         proxy: 'localhost:9001'
     });
 
-    gulp.watch(TEMPLATE_SRC).on('change', browserSync.reload);
-    gulp.watch(SASS_SRC, ['setup-styles']);
-    gulp.watch(JS_SRC, ['setup-scripts']).on('change', browserSync.reload);
-    gulp.watch(IMG_SRC, ['setup-images']).on('change', browserSync.reload);
+    gulp.watch(PATH.templateWatch).on('change', browserSync.reload);
+    gulp.watch(PATH.sassWatch, ['styles']);
+    gulp.watch(PATH.jsWatch, ['scripts-watch']);
+    gulp.watch(PATH.imgWatch, ['images']).on('change', browserSync.reload);
 });
 
 // Create most optimized build
-gulp.task('build',  ['setup-styles-min', 'setup-scripts-min', 'setup-images']);
+gulp.task('build',  ['setup-styles-min', 'setup-scripts-min', 'images']);
