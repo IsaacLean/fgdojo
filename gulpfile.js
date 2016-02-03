@@ -27,8 +27,12 @@ var PATH = {
 };
 
 
-// Setup styles, scripts & images once then watch
+/*
+ * [ gulp ]
+ * Run templates, styles, scripts & image tasks once then watch
+ */
 gulp.task('default', ['templates', 'styles', 'scripts', 'images', 'watch']);
+
 
 /*
  * [ gulp templates ]
@@ -39,6 +43,7 @@ gulp.task('templates', function() {
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(PATH.templateDest));
 });
+
 
 /*
  * [ gulp styles ]
@@ -87,14 +92,11 @@ gulp.task('scripts', function() {
     return data.pipe(gulp.dest(PATH.root));
 });
 
-// Used for 'gulp watch'.
-// Triggers BrowserSync reload after 'gulp scripts' completes during 'gulp watch'.
-gulp.task('scripts-watch', ['scripts'], function() {
-    browserSync.reload();
-});
 
-
-// Compress JPEG & PNG images
+/*
+ * [ gulp images ]
+ * Compress JPEG & PNG images
+ */
 gulp.task('images', function() {
     return gulp.src(PATH.imgWatch)
         .pipe(imagemin({
@@ -104,7 +106,18 @@ gulp.task('images', function() {
         .pipe(gulp.dest(PATH.imgDest));
 });
 
-// Watch any changes in templates, Sass, JS & images and update if changes occur
+
+// Used for 'gulp watch'.
+// Triggers BrowserSync reload after 'gulp scripts' completes during 'gulp watch'.
+gulp.task('scripts-watch', ['scripts'], function() {
+    browserSync.reload();
+});
+
+/*
+ * [ gulp watch ]
+ * Watch any changes in templates, Sass, JS & images and run their respective tasks
+ * when changes occur
+ */
 gulp.task('watch', function() {
     browserSync.init({
         port: 9002,
@@ -117,5 +130,30 @@ gulp.task('watch', function() {
     gulp.watch(PATH.imgWatch, ['images']).on('change', browserSync.reload);
 });
 
-// Create most optimized build
-gulp.task('build',  ['setup-styles-min', 'setup-scripts-min', 'images']);
+
+// Used for 'gulp build'.
+gulp.task('styles-prod', function() {
+    return gulp.src(PATH.sassWatch)
+        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(rename({extname: '.min.css'}))
+        .pipe(autoprefixer({browser: ['last 2 versions']}))
+        .pipe(gulp.dest(PATH.sassDest));
+});
+
+gulp.task('scripts-prod', function() {
+    return gulp.src([PATH.jsWatch])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failOnError())
+        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(uglify())
+        .pipe(rename({extname: '.min.js'}))
+        .pipe(gulp.dest(PATH.root));
+});
+
+
+/* 
+ * [ gulp build ]
+ * Create most optimized build for production
+ */
+gulp.task('build',  ['templates', 'styles-prod', 'scripts-prod', 'images']);
