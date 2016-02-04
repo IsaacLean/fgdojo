@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var argv = require('yargs').argv;
 var autoprefixer = require('gulp-autoprefixer');
 var browserSync = require('browser-sync').create();
-// var concat = require('gulp-concat');
+var concat = require('gulp-concat');
 var eslint = require('gulp-eslint');
 var htmlmin = require('gulp-htmlmin');
 var imagemin = require('gulp-imagemin');
@@ -18,12 +18,14 @@ var PATH = {
     root: './',
     templateWatch: './view/templates/*.html',
     templateDest: './view/templates-min',
-    sassWatch: './view/sass/**/*.scss',
+    cssWatch: './view/styles/**/*.css',
+    sassWatch: './view/styles/**/*.scss',
     sassDest: './static/css',
     jsWatch: './view/js/**/*.js',
     jsDest: './static/js',
     imgWatch: './view/img/*',
-    imgDest: './static/img'
+    imgDest: './static/img',
+    bootstrapCss: './node_modules/bootstrap/dist/css/bootstrap.css'
 };
 
 
@@ -51,7 +53,8 @@ gulp.task('templates', function() {
  * --min: Minfies CSS
  */
 gulp.task('styles', function() {
-    var data = gulp.src(PATH.sassWatch);
+    var data = gulp.src([PATH.bootstrapCss, PATH.sassWatch])
+        .pipe(concat('style.css'));
 
     if(argv.min === undefined) {
         data = data.pipe(sass());
@@ -74,7 +77,7 @@ gulp.task('styles', function() {
  */
 gulp.task('scripts', function() {
     // TODO: get sourcemaps working with webpack
-    var data = gulp.src([PATH.jsWatch]);
+    var data = gulp.src(PATH.jsWatch);
 
     if(argv.nolint === undefined) {
         data = data.pipe(eslint())
@@ -133,7 +136,8 @@ gulp.task('watch', function() {
 
 // Used for 'gulp build'.
 gulp.task('styles-prod', function() {
-    return gulp.src(PATH.sassWatch)
+    return gulp.src([PATH.cssWatch, PATH.sassWatch])
+        .pipe(concat('style.css'))
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(rename({extname: '.min.css'}))
         .pipe(autoprefixer({browser: ['last 2 versions']}))
@@ -141,7 +145,7 @@ gulp.task('styles-prod', function() {
 });
 
 gulp.task('scripts-prod', function() {
-    return gulp.src([PATH.jsWatch])
+    return gulp.src(PATH.jsWatch)
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError())
@@ -150,7 +154,6 @@ gulp.task('scripts-prod', function() {
         .pipe(rename({extname: '.min.js'}))
         .pipe(gulp.dest(PATH.root));
 });
-
 
 /* 
  * [ gulp build ]
