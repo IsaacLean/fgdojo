@@ -21,9 +21,9 @@ class LoginEndpoint(webapp2.RequestHandler):
             if validPw:
                 createSecureCookie(self.response, 'secv', str(user.key.id()) + str(user.created))
             else:
-                self.error(401)
+                self.error(400)
         else:
-            self.error(404)
+            self.error(400)
 
 
 # Render view for endpoint testing

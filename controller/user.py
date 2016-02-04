@@ -34,11 +34,21 @@ class UserEndpoint(webapp2.RequestHandler):
         tag = self.request.get('tag')
         realName = self.request.get('realName')
 
-        # TODO: check if tag or email already exists
-        pwHash = User.createPwHash(pw)
+        if email == '' or pw == '' or tag == '':
+            self.error(400)
+        else:
+            existingUser = User.query(User.email == email or User.tag == tag).fetch()
 
-        newUser = User(email=email, pwHash=pwHash, tag=tag, realName=realName)
-        newUser.put()
+            if len(existingUser) is 0:
+                if realName == '':
+                    realName = None
+
+                pwHash = User.createPwHash(pw)
+
+                newUser = User(email=email, pwHash=pwHash, tag=tag, realName=realName)
+                newUser.put()
+            else:
+                self.error(409)
 
 
 # Render view for endpoint testing
