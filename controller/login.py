@@ -20,6 +20,7 @@ class LoginEndpoint(webapp2.RequestHandler):
             validPw = User.verifyPw(pw, user.pwHash)
             if validPw:
                 createSecureCookie(self.response, 'secv', str(user.key.id()) + str(user.created))
+                self.redirect('/')
             else:
                 self.error(400)
         else:

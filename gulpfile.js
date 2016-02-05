@@ -81,8 +81,7 @@ gulp.task('scripts', function() {
 
     if(argv.nolint === undefined) {
         data = data.pipe(eslint())
-            .pipe(eslint.format())
-            .pipe(eslint.failOnError());
+            .pipe(eslint.format());
     }
         
     data = data.pipe(webpack(require('./webpack.config.js')));

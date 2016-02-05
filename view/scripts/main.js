@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { Router, browserHistory } from 'react-router';
 
-const App = () => <p>Look I'm an app lololol</p>;
+import routes from './routes';
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(
+    <Router history={browserHistory} routes={routes} />,
+    document.getElementById('app')
+);
