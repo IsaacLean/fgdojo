@@ -20,11 +20,11 @@ var PATH = {
     templateDest: './view/templates-min',
     cssWatch: './view/styles/**/*.css',
     sassWatch: './view/styles/**/*.scss',
-    sassDest: './static/css',
-    jsWatch: './view/js/**/*.js',
-    jsDest: './static/js',
+    sassDest: './asset/css',
+    jsWatch: './view/scripts/**/*.js',
+    jsDest: './asset/js',
     imgWatch: './view/img/*',
-    imgDest: './static/img',
+    imgDest: './asset/img',
     bootstrapCss: './node_modules/bootstrap/dist/css/bootstrap.css'
 };
 
