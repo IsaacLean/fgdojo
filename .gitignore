@@ -5,4 +5,5 @@ view/templates-min/
 *.pyc
 auth.py
 config.py
+npm-debug.log
 Thumbs.db

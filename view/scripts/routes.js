@@ -20,11 +20,30 @@ class Welcome extends Component {
 }
 
 class Greeting extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { counter: 0 };
+
+        this.onClickLink = this.onClickLink.bind(this);
+    }
+
+    onClickLink() {
+        this.setState({ counter: ++this.state.counter });
+    }
+
     render() {
         return <div>
             greetings!
+            {this.state.counter}
             <Link to={'/'} className="btn btn-primary">
                 Back to root
+            </Link>
+            <Link to={'greet'} onClick={this.onClickLink} className="btn btn-primary">
+                Go to greet
+            </Link>
+            <Link to={'greet2'} className="btn btn-primary">
+                Go to greet2
             </Link>
         </div>;
     }
