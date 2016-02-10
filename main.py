@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import webapp2
-from controller.main import MainHandler
-from controller.user import UserEndpoint
-from controller.user import UserDebugHandler
-from controller.login import LoginEndpoint
-from controller.login import LoginDebugHandler
-from controller.login import SessionDebugHandler
-from controller.logout import LogoutHandler
+from controller.guest import GuestHandler
+from controller.api.user import UserEndpoint
+from controller.api.user import UserDebugHandler
+from controller.api.login import LoginEndpoint
+from controller.api.login import LoginDebugHandler
+from controller.api.login import SessionDebugHandler
+from controller.api.logout import LogoutHandler
 
 app = webapp2.WSGIApplication([
     ('/api/user', UserEndpoint),
@@ -17,5 +17,5 @@ app = webapp2.WSGIApplication([
     ('/api/login/debug', LoginDebugHandler),
     ('/api/login/debug2', SessionDebugHandler),
     ('/api/logout', LogoutHandler),
-    ('/.*', MainHandler)
+    ('/.*', GuestHandler)
 ], debug=True)
