@@ -1,6 +1,6 @@
 // Serialize an object into a list of parameters
-module.exports = function() {
-    function parameterize(dataObj) {
+module.exports = {
+    parameterize: function (dataObj) {
         var params = '';
 
         for (var key in dataObj) {

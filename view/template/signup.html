@@ -11,7 +11,7 @@
     <div class="container">
         <h1>FG Dojo</h1>
         <h2>Sign Up</h2>
-        <form action="/api/user" method="POST">
+        <form action="/api/user" method="POST" id="signup-form">
             <fieldset class="form-group">
                 <label for="email">Email</label>
                 <input type="email" name="email" class="form-control" placeholder="azure@diamond.com">
@@ -26,7 +26,7 @@
             </fieldset>
             <fieldset class="form-group">
                 <label for="real_name">Real Name</label>
-                <input type="text" name="pw" class="form-control" placeholder="bob dillan">
+                <input type="text" name="realName" class="form-control" placeholder="bob dillan">
             </fieldset>
             <button type="submit" class="btn btn-primary">Submit</button>
             <a href="/"><button type="button" class="btn btn-info">Login</button></a>
