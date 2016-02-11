@@ -21,8 +21,8 @@ var PATH = {
     cssWatch: './view/style/**/*.css',
     sassWatch: './view/style/**/*.scss',
     sassDest: './asset/css',
-    jsWatch: './view/script/**/*.js',
-    jsDest: './asset/js',
+    jsExternal: './view/script/external/**/*.js',
+    jsInternal: './view/script/internal/**/*.js',
     wpInternal: './webpack.config.internal.js',
     wpExternal: './webpack.config.external.js',
     imgWatch: './view/img/*',
@@ -33,9 +33,17 @@ var PATH = {
 
 /*
  * [ gulp ]
- * Run templates, styles, scripts & image tasks once then watch
+ * Run templates, styles, scripts-external, scripts-internal,
+ * & image tasks once then watch
  */
-gulp.task('default', ['templates', 'styles', 'scripts', 'images', 'watch']);
+gulp.task('default', [
+    'templates',
+    'styles',
+    'scripts-external',
+    'scripts-internal',
+    'images',
+    'watch'
+]);
 
 
 /*
@@ -72,14 +80,40 @@ gulp.task('styles', function() {
 
 
 /* 
- * [ gulp scripts ]
- * Run ESLint and compile JS with webpack
+ * [ gulp scripts-external ]
+ * Run ESLint and compile external JS with webpack
  * --nolint: Skips ESLint
  * --min: Uglifies JS
  */
-gulp.task('scripts', function() {
+gulp.task('scripts-external', function() {
     // TODO: get sourcemaps working with webpack
-    var data = gulp.src(PATH.jsWatch);
+    var data = gulp.src(PATH.jsExternal);
+
+    if(argv.nolint === undefined) {
+        data = data.pipe(eslint())
+            .pipe(eslint.format());
+    }
+        
+    data = data.pipe(webpack(require(PATH.wpExternal)));
+
+    if(argv.min !== undefined) {
+        data = data.pipe(uglify())
+            .pipe(rename({extname: '.min.js'}));
+    }
+
+    return data.pipe(gulp.dest(PATH.root));
+});
+
+
+/* 
+ * [ gulp scripts-internal ]
+ * Run ESLint and compile internal JS with webpack
+ * --nolint: Skips ESLint
+ * --min: Uglifies JS
+ */
+gulp.task('scripts-internal', function() {
+    // TODO: get sourcemaps working with webpack
+    var data = gulp.src(PATH.jsInternal);
 
     if(argv.nolint === undefined) {
         data = data.pipe(eslint())
@@ -112,8 +146,13 @@ gulp.task('images', function() {
 
 
 // Used for 'gulp watch'.
-// Triggers BrowserSync reload after 'gulp scripts' completes during 'gulp watch'.
-gulp.task('scripts-watch', ['scripts'], function() {
+// Triggers BrowserSync reload after 'gulp scripts-external' completes during 'gulp watch'.
+gulp.task('scripts-external-watch', ['scripts-external'], function() {
+    browserSync.reload();
+});
+
+// Triggers BrowserSync reload after 'gulp scripts-internal' completes during 'gulp watch'.
+gulp.task('scripts-internal-watch', ['scripts-internal'], function() {
     browserSync.reload();
 });
 
@@ -130,7 +169,8 @@ gulp.task('watch', function() {
 
     gulp.watch(PATH.templateWatch).on('change', browserSync.reload);
     gulp.watch(PATH.sassWatch, ['styles']);
-    gulp.watch(PATH.jsWatch, ['scripts-watch']);
+    gulp.watch(PATH.jsExternal, ['scripts-external-watch']);
+    gulp.watch(PATH.jsInternal, ['scripts-internal-watch']);
     gulp.watch(PATH.imgWatch, ['images']).on('change', browserSync.reload);
 });
 
@@ -145,8 +185,19 @@ gulp.task('styles-prod', function() {
         .pipe(gulp.dest(PATH.sassDest));
 });
 
-gulp.task('scripts-prod', function() {
-    return gulp.src(PATH.jsWatch)
+gulp.task('scripts-external-prod', function() {
+    return gulp.src(PATH.jsExternal)
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failOnError())
+        .pipe(webpack(require(PATH.wpExternal)))
+        .pipe(uglify())
+        .pipe(rename({extname: '.min.js'}))
+        .pipe(gulp.dest(PATH.root));
+});
+
+gulp.task('scripts-internal-prod', function() {
+    return gulp.src(PATH.jsInternal)
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError())
@@ -160,4 +211,10 @@ gulp.task('scripts-prod', function() {
  * [ gulp build ]
  * Create most optimized build for production
  */
-gulp.task('build',  ['templates', 'styles-prod', 'scripts-prod', 'images']);
+gulp.task('build',  [
+    'templates',
+    'styles-prod',
+    'scripts-external-prod',
+    'scripts-internal-prod',
+    'images'
+]);
