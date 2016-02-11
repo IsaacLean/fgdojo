@@ -4,12 +4,9 @@ import webapp2
 from auth import verifySecureCookie
 from env import JINJA_ENV
 
-import logging
-
 
 class GuestHandler(webapp2.RequestHandler):
     def get(self):
-        logging.info(self.request.path)
         if verifySecureCookie(self.request, 'secv'):
             # User is logged in
             template = JINJA_ENV.get_template('feed.html')

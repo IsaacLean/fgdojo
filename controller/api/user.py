@@ -47,6 +47,7 @@ class UserEndpoint(webapp2.RequestHandler):
 
                 newUser = User(email=email, pwHash=pwHash, tag=tag, realName=realName)
                 newUser.put()
+                self.redirect('/feed')
             else:
                 self.error(409)
 
