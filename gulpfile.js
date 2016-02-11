@@ -16,13 +16,15 @@ var webpack = require('gulp-webpack');
 
 var PATH = {
     root: './',
-    templateWatch: './view/templates/*.html',
-    templateDest: './view/templates-min',
-    cssWatch: './view/styles/**/*.css',
-    sassWatch: './view/styles/**/*.scss',
+    templateWatch: './view/template/*.html',
+    templateDest: './view/template-min',
+    cssWatch: './view/style/**/*.css',
+    sassWatch: './view/style/**/*.scss',
     sassDest: './asset/css',
-    jsWatch: './view/scripts/**/*.js',
+    jsWatch: './view/script/**/*.js',
     jsDest: './asset/js',
+    wpInternal: './webpack.config.internal.js',
+    wpExternal: './webpack.config.external.js',
     imgWatch: './view/img/*',
     imgDest: './asset/img',
     bootstrapCss: './node_modules/bootstrap/dist/css/bootstrap.css'
@@ -84,7 +86,7 @@ gulp.task('scripts', function() {
             .pipe(eslint.format());
     }
         
-    data = data.pipe(webpack(require('./webpack.config.js')));
+    data = data.pipe(webpack(require(PATH.wpInternal)));
 
     if(argv.min !== undefined) {
         data = data.pipe(uglify())
@@ -148,7 +150,7 @@ gulp.task('scripts-prod', function() {
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError())
-        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(webpack(require(PATH.wpInternal)))
         .pipe(uglify())
         .pipe(rename({extname: '.min.js'}))
         .pipe(gulp.dest(PATH.root));

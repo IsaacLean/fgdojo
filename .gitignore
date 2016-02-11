@@ -1,6 +1,6 @@
 node_modules/
 asset/
-view/templates-min/
+view/template-min/
 *.map
 *.pyc
 auth.py
