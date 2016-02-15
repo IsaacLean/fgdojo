@@ -1,11 +1,12 @@
 import webapp2
-from auth import verifySecureCookie
+
+from auth import verifySecureSession
 from env import JINJA_ENV
 
 
 class GuestHandler(webapp2.RequestHandler):
     def get(self):
-        if verifySecureCookie(self.request, 'secv'):
+        if verifySecureSession(self.request):
             # User is logged in
             template = JINJA_ENV.get_template('feed.html')
             self.response.write(template.render())

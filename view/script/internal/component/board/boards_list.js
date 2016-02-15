@@ -21,7 +21,7 @@ export default class BoardsCreate extends Component {
             boardNodes = <li>There are currently no default boards set.</li>;
         } else {
             boardNodes = this.state.boardData.map(function(board) {
-                return <li key={board.name}>
+                return <li key={board.name} className="list-group-item">
                     {board.name}
                 </li>;
             });
@@ -29,7 +29,7 @@ export default class BoardsCreate extends Component {
 
         return <div id="boards-create">
             <h2>Boards</h2>
-            <ul>
+            <ul className="list-group">
                 {boardNodes}
             </ul>
         </div>;

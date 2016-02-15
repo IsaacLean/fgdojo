@@ -1,9 +1,9 @@
 import json
 import webapp2
+
 from env import JINJA_ENV
 from model.board import Board
 
-import logging
 
 # /board
 class BoardEndpoint(webapp2.RequestHandler):

@@ -1,9 +1,9 @@
 import json
 import webapp2
+
 from env import JINJA_ENV
 from model.user import User
 
-import logging
 
 # /user
 class UserEndpoint(webapp2.RequestHandler):
@@ -32,12 +32,6 @@ class UserEndpoint(webapp2.RequestHandler):
         pw = self.request.get('pw')
         tag = self.request.get('tag')
         realName = self.request.get('realName')
-
-        logging.info(self.request)
-        logging.info(email)
-        logging.info(pw)
-        logging.info(tag)
-        logging.info(realName)
 
         if email == '' or pw == '' or tag == '':
             self.error(400)

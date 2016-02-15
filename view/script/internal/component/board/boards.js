@@ -34,14 +34,6 @@ export default class Boards extends Component {
             }
         }
 
-        // if(this.props.routes.length === 3) {
-        //     if(this.props.routes[2].path === 'create') {
-        //         comp = <div>create comp</div>;
-        //     }
-        // } else {
-        //     comp = <div>board comp</div>;
-        // }
-
         return <div>
             {comp}
             <Link to={'/b'} className="btn btn-primary">
