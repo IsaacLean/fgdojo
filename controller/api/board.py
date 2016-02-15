@@ -5,9 +5,42 @@ from model.board import Board
 
 import logging
 
-
 # /board
 class BoardEndpoint(webapp2.RequestHandler):
+    # Read board
+    def get(self, id=None):
+        if id is not None:
+            # /b/{ID}
+            board = Board.get_by_id(int(id))
+
+            if board is not None:
+                response = {
+                    'name': board.name,
+                    'desc': board.desc,
+                    'admins': board.admins
+                }
+
+                self.response.write(json.dumps(response))
+            else:
+                self.error(404)
+        else:
+            # /b: Read list of default boards
+            boardsQuery = Board.query().fetch(10)
+            boards = []
+
+            for board in boardsQuery:
+                boardData = {
+                    'name': board.name,
+                    'desc': board.desc,
+                    'admins': board.admins
+                }
+                boards.append(boardData)
+
+            response = {
+                'boards': boards
+            }
+
+            self.response.write(json.dumps(response))
 
     # Create new board
     def post(self):

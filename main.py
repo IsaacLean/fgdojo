@@ -19,5 +19,6 @@ app = webapp2.WSGIApplication([
     ('/api/login/debug2', SessionDebugHandler),
     ('/api/logout', LogoutHandler),
     ('/api/board', BoardEndpoint),
+    ('/api/board/([0-9]+)', BoardEndpoint),
     ('/.*', GuestHandler)
 ], debug=True)
