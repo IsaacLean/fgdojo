@@ -1,6 +1,7 @@
 import json
 import webapp2
 
+from auth import getSecureUser
 from env import JINJA_ENV
 from model.board import Board
 
@@ -46,18 +47,22 @@ class BoardEndpoint(webapp2.RequestHandler):
     def post(self):
         name = self.request.get('name')
         desc = self.request.get('desc')
-        creator = self.request.get('creator')
 
-        if name == '' or creator == '':
+        if name == '':
             self.error(400)
         else:
-            existingBoard = Board.query(Board.name == name).fetch()
+            creator = getSecureUser(self.request)
 
-            if len(existingBoard) is 0:
-                admins = [creator]
-                newBoard = Board(name=name, desc=desc, admins=admins)
-                newBoard.put()
+            if(creator is not None):
+                existingBoard = Board.query(Board.name == name).fetch()
 
-                # TODO: redirect to board URL
+                if len(existingBoard) is 0:
+                    admins = [creator]
+                    newBoard = Board(name=name, desc=desc, admins=admins)
+                    newBoard.put()
+
+                    # TODO: redirect to board URL
+                else:
+                    self.error(409)
             else:
-                self.error(409)
+                self.error(401)

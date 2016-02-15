@@ -15,13 +15,9 @@ export default class BoardsCreate extends Component {
     onSubmit(evt) {
         evt.preventDefault();
 
-        let data = util.getFormData('#boards-create-form');
-        data.creator = 'billy';
-        data = $.param(data);
-
         $.post(
             '/api/board',
-            data
+            $('#boards-create-form').serialize()
         );
     }
 
