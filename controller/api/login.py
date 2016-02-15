@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import webapp2
 from auth import createSecureCookie
 from auth import verifySecureCookie
@@ -20,7 +18,7 @@ class LoginEndpoint(webapp2.RequestHandler):
             validPw = User.verifyPw(pw, user.pwHash)
             if validPw:
                 createSecureCookie(self.response, 'secv', str(user.key.id()) + str(user.created))
-                self.redirect('/')
+                self.redirect('/feed')
             else:
                 self.error(400)
         else:

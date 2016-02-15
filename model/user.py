@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import auth
 from google.appengine.ext import ndb
 

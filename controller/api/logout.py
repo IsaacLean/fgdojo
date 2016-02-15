@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import webapp2
 from auth import deleteSecureCookie
 

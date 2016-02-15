@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import json
 import webapp2
 from env import JINJA_ENV

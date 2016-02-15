@@ -8,6 +8,7 @@ from controller.api.login import LoginEndpoint
 from controller.api.login import LoginDebugHandler
 from controller.api.login import SessionDebugHandler
 from controller.api.logout import LogoutHandler
+from controller.api.board import BoardEndpoint
 
 app = webapp2.WSGIApplication([
     ('/api/user', UserEndpoint),
@@ -17,5 +18,6 @@ app = webapp2.WSGIApplication([
     ('/api/login/debug', LoginDebugHandler),
     ('/api/login/debug2', SessionDebugHandler),
     ('/api/logout', LogoutHandler),
+    ('/api/board', BoardEndpoint),
     ('/.*', GuestHandler)
 ], debug=True)
