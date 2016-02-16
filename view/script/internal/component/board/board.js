@@ -6,9 +6,6 @@ export default class Board extends Component {
     constructor(props) {
         super(props);
 
-        console.log(this.props);
-        console.log(this.context);
-
         this.state = { boardData: null };
 
         $.get('/api/board/' + this.props.name, function(data) {

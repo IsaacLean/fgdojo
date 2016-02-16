@@ -3,6 +3,8 @@ import { IndexRoute, Link, Redirect, Route, Router } from 'react-router';
 
 import App from './component/app';
 import Boards from './component/board/boards';
+import Feed from './component/feed';
+
 
 class Welcome extends Component {
     render() {
@@ -58,14 +60,17 @@ const Test = () => {
 };
 
 
-export default <Route path='/' component={App}>
-    <IndexRoute component={Welcome} />
+export default <Route component={App}>
+    <Redirect from='/' to='feed' />
+
+    // feed
+    <Route path='feed' component={Feed} />
 
     // boards
-    <Route path="b(/:name)" component={Boards} />
-    <Redirect from="boards" to="b" />
-    <Redirect from="board" to="b" />
+    <Route path='b(/:name)' component={Boards} />
+    <Redirect from='boards' to='b' />
+    <Redirect from='board' to='b' />
 
-    <Route path="greet" component={Greeting} />
-    <Route path="*" component={NotFound} />
+    <Route path='greet' component={Greeting} />
+    <Route path='*' component={NotFound} />
 </Route>;

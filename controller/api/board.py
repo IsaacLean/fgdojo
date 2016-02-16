@@ -6,20 +6,13 @@ from env import JINJA_ENV
 from model.board import Board
 
 
-import logging
-
-
 # /board
 class BoardEndpoint(webapp2.RequestHandler):
     # Read board
     def get(self, name=None):
-        logging.info('hai')
-        logging.info(name)
         if name is not None:
             # /board/{name}: Read data for specific board
             board = Board.query(Board.name == name).get()
-            logging.info(board)
-
 
             if board is not None:
                 response = {
