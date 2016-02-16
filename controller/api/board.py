@@ -6,13 +6,20 @@ from env import JINJA_ENV
 from model.board import Board
 
 
+import logging
+
+
 # /board
 class BoardEndpoint(webapp2.RequestHandler):
     # Read board
-    def get(self, id=None):
-        if id is not None:
-            # /b/{ID}
-            board = Board.get_by_id(int(id))
+    def get(self, name=None):
+        logging.info('hai')
+        logging.info(name)
+        if name is not None:
+            # /board/{name}: Read data for specific board
+            board = Board.query(Board.name == name).get()
+            logging.info(board)
+
 
             if board is not None:
                 response = {
@@ -25,7 +32,7 @@ class BoardEndpoint(webapp2.RequestHandler):
             else:
                 self.error(404)
         else:
-            # /b: Read list of default boards
+            # /board: Read list of default boards
             boardsQuery = Board.query().fetch(10)
             boards = []
 

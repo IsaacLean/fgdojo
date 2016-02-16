@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
+import Board from './board';
 import BoardsList from './boards_list';
 import BoardsCreate from './boards_create';
+
 
 export default class Boards extends Component {
     static contextTypes = {
@@ -10,11 +12,11 @@ export default class Boards extends Component {
     };
 
     render() {
-        let pathLen = this.props.routes.length;
         let comp;
 
-        // /b GET queries
-        if(pathLen === 2) {
+        if(this.props.params.name) {
+            comp = <Board name={this.props.params.name} router={this.context.router} />;
+        } else {
             let { query } = this.props.location;
 
             switch(query.show) {

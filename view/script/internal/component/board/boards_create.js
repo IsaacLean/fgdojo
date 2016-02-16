@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
 
-import util from '../../util';
 
 export default class BoardsCreate extends Component {
     constructor(props) {

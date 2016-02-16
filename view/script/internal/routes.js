@@ -62,9 +62,7 @@ export default <Route path='/' component={App}>
     <IndexRoute component={Welcome} />
 
     // boards
-    <Route path="b" component={Boards}>
-        <Route path="create" component={Boards} />
-    </Route>
+    <Route path="b(/:name)" component={Boards} />
     <Redirect from="boards" to="b" />
     <Redirect from="board" to="b" />
 
