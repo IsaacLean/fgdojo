@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 import Board from './board';
 import BoardsList from './boards_list';
-import BoardsCreate from './boards_create';
+import BoardsCreate from './board_create';
 
 
 export default class Boards extends Component {

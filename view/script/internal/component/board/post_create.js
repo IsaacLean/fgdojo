@@ -2,21 +2,21 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 
 
-export default class BoardsCreate extends Component {
+export default class PostCreate extends Component {
     constructor(props) {
         super(props);
 
         this.onSubmit = this.onSubmit.bind(this);
 
-        document.title = 'FG Dojo: Create a new board';
+        document.title = 'FG Dojo: Create a new post';
     }
 
     onSubmit(evt) {
         evt.preventDefault();
 
         $.post(
-            '/api/board',
-            $('#boards-create-form').serialize()
+            '/api/board/post',
+            $('#post-create-form').serialize()
         );
     }
 
