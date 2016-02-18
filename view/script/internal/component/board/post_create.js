@@ -22,7 +22,7 @@ export default class PostCreate extends Component {
 
     render() {
         return <div id="boards-create">
-            <h2>Create a new board</h2>
+            <h2>Create a new post</h2>
             <form id="boards-create-form" onSubmit={this.onSubmit}>
                 <fieldset className="form-group">
                     <label htmlFor="name">Name</label>

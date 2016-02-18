@@ -1,5 +1,8 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+import { Link } from 'react-router';
+
+import PostCreate from './post_create';
 
 
 export default class Board extends Component {
@@ -20,14 +23,34 @@ export default class Board extends Component {
 
     render() {
         let boardDesc = '';
+        let comp;
 
         if(this.state.boardData) {
             boardDesc = this.state.boardData.desc;
         }
 
+        if(this.props.query.show === 'new_post') {
+            comp = <div>i'm the post creation form</div>;
+        } else {
+            comp = <div>i'm the post list</div>;
+        }
+
+        let url = '/b/' + this.props.name;
+
         return <div id="board">
-            <h2>{this.props.name}</h2>
-            <p>{boardDesc}</p>
+            <div className="card-header">
+                <Link to={url}>
+                    {this.props.name}
+                </Link>
+                <i>{boardDesc}</i>
+                <Link to={ {pathname: url, query: { show: 'new_post' }} } className="btn btn-success btn-sm pull-xs-right">
+                    Create new post
+                </Link>
+                
+            </div>
+            <div className="card-block">
+                {comp}
+            </div>
         </div>;
     }
 }

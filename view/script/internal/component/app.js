@@ -19,13 +19,16 @@ export default class App extends Component {
                             <a className="nav-link" href="#">Events</a>
                         </li>
                     </ul>
+                    <ul className="nav navbar-nav pull-xs-right">
+                        <li className="nav-item">
+                            <a href="/api/logout" className="nav-link">Logout</a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
             <div id="content" className="container">
                 <div className="card">
-                    <div className="card-block">
-                        {this.props.children}
-                    </div>
+                    {this.props.children}
                 </div>
             </div>
         </div>;

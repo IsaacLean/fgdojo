@@ -20,22 +20,34 @@ export default class BoardsList extends Component {
         let boardNodes;
 
         if(this.state.boardsData === null) {
-            boardNodes = <li>There are currently no default boards set.</li>;
+            boardNodes = <li className="list-group-item">
+                There are currently no default boards set.
+            </li>;
         } else {
             boardNodes = this.state.boardsData.map(function(board) {
-                return <li key={board.name} className="list-group-item">
-                    <Link to={'/b/' + board.name}>
-                        {board.name}
-                    </Link>
-                </li>;
+                return <Link to={'/b/' + board.name} key={board.name} className="list-group-item">
+                    <h5 className="list-group-item-heading">{board.name}</h5>
+                    <p className="list-group-item-text">{board.desc}</p>
+                </Link>;
             });
         }
 
-        return <div id="boards-create">
-            <h2>Boards</h2>
-            <ul className="list-group">
-                {boardNodes}
-            </ul>
+        return <div id="boards-list">
+            <div className="card-header">
+                <Link to={'/b'} className="card-title">
+                    Boards
+                </Link>
+                <div className="btn-group pull-xs-right">
+                    <Link to={ {pathname: '/b', query: { show: 'create' }} } className="btn btn-success btn-sm">
+                        Create new board
+                    </Link>
+                </div>
+            </div>
+            <div className="card-block">
+                <div className="list-group">
+                    {boardNodes}
+                </div>
+            </div>
         </div>;
     }
 }
