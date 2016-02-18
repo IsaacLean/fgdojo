@@ -5,7 +5,7 @@
   "main": "main.py",
   "scripts": {
     "gae": "dev_appserver.py --port=9001 app.yaml",
-    "gulp": "gulp",
+    "gulp": "gulp --color",
     "wp-internal": "webpack  --config=webpack.config.internal.js",
     "wp-external": "webpack --config=webpack.config.external.js"
   },

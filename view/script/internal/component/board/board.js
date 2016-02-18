@@ -30,7 +30,7 @@ export default class Board extends Component {
         }
 
         if(this.props.query.show === 'new_post') {
-            comp = <div>i'm the post creation form</div>;
+            comp = <PostCreate />;
         } else {
             comp = <div>i'm the post list</div>;
         }
@@ -46,7 +46,6 @@ export default class Board extends Component {
                 <Link to={ {pathname: url, query: { show: 'new_post' }} } className="btn btn-success btn-sm pull-xs-right">
                     Create new post
                 </Link>
-                
             </div>
             <div className="card-block">
                 {comp}
