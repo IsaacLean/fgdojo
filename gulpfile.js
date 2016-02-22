@@ -21,11 +21,16 @@ var PATH = {
     sassDest: './asset/css',
     jsExternal: './view/script/external/**/*.js',
     jsInternal: './view/script/internal/**/*.js',
-    wpInternal: './webpack.config.internal.js',
-    wpExternal: './webpack.config.external.js',
     imgWatch: './view/img/*',
     imgDest: './asset/img',
     bootstrapCss: './node_modules/bootstrap/dist/css/bootstrap.css'
+};
+
+var wpExternal = {
+    entry: './view/script/external/main.js',
+    output: {
+        filename: './asset/js/external.js'
+    }
 };
 
 var wpInternal = {
@@ -46,10 +51,18 @@ var wpInternal = {
     }
 };
 
-var uglify = [new webpack.optimize.UglifyJsPlugin({
-    minimize: true,
-    output: { comments: false }
-})];
+// Setup Uglify for Webpack
+function uglify(wpConfig) {
+    var uglifyConfig = [new webpack.optimize.UglifyJsPlugin({
+        minimize: true,
+        output: { comments: false }
+    })];
+
+    wpConfig.plugins = uglifyConfig;
+    wpConfig.devtool = 'source-map';
+
+    return wpConfig;
+}
 
 
 /*
@@ -107,22 +120,20 @@ gulp.task('styles', function() {
  * --min: Uglifies JS
  */
 gulp.task('scripts-external', function() {
-    // TODO: get sourcemaps working with webpack
     var data = gulp.src(PATH.jsExternal);
 
     if(argv.nolint === undefined) {
         data = data.pipe(eslint())
             .pipe(eslint.format());
     }
-        
-    data = data.pipe(wpStream(require(PATH.wpExternal)));
 
     if(argv.min !== undefined) {
-        data = data.pipe(uglify())
-            .pipe(rename({extname: '.min.js'}));
+        uglify(wpExternal);
+        wpExternal.output.filename = './asset/js/external.min.js';
     }
 
-    return data.pipe(gulp.dest(PATH.root));
+    return data.pipe(wpStream(wpExternal))
+        .pipe(gulp.dest(PATH.root));
 });
 
 
@@ -133,7 +144,6 @@ gulp.task('scripts-external', function() {
  * --min: Uglifies JS
  */
 gulp.task('scripts-internal', function() {
-    // TODO: get sourcemaps working with webpack
     var data = gulp.src(PATH.jsInternal);
 
     if(argv.nolint === undefined) {
@@ -142,9 +152,8 @@ gulp.task('scripts-internal', function() {
     }
 
     if(argv.min !== undefined) {
-        wpInternal.plugins = uglify;
+        uglify(wpInternal);
         wpInternal.output.filename = './asset/js/bundle.min.js';
-        wpInternal.devtool = 'source-map';
     }
 
     return data.pipe(wpStream(wpInternal))
@@ -207,24 +216,26 @@ gulp.task('styles-prod', function() {
 });
 
 gulp.task('scripts-external-prod', function() {
+    uglify(wpExternal);
+    wpExternal.output.filename = './asset/js/external.min.js';
+
     return gulp.src(PATH.jsExternal)
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError())
-        .pipe(wpStream(require(PATH.wpExternal)))
-        .pipe(uglify())
-        .pipe(rename({extname: '.min.js'}))
+        .pipe(wpStream(wpExternal))
         .pipe(gulp.dest(PATH.root));
 });
 
 gulp.task('scripts-internal-prod', function() {
+    uglify(wpInternal);
+    wpInternal.output.filename = './asset/js/bundle.min.js';
+
     return gulp.src(PATH.jsInternal)
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError())
-        .pipe(wpStream(require(PATH.wpInternal)))
-        .pipe(uglify())
-        .pipe(rename({extname: '.min.js'}))
+        .pipe(wpStream(wpInternal))
         .pipe(gulp.dest(PATH.root));
 });
 
