@@ -9,10 +9,8 @@ var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var rename = require('gulp-rename');
 var sass = require('gulp-sass');
-// var sourcemaps = require('gulp-sourcemaps');
-var uglify = require('gulp-uglify');
-var webpack = require('gulp-webpack');
-
+var wpStream = require('webpack-stream');
+var webpack = require('webpack');
 
 var PATH = {
     root: './',
@@ -29,6 +27,29 @@ var PATH = {
     imgDest: './asset/img',
     bootstrapCss: './node_modules/bootstrap/dist/css/bootstrap.css'
 };
+
+var wpInternal = {
+    entry: {
+        app: './view/script/internal/main.js'
+    },
+    output: {
+        filename: './asset/js/bundle.js'
+    },
+    module: {
+        loaders: [{
+            exclude: /node_modules/,
+            loader: 'babel'
+        }]
+    },
+    resolve: {
+        extensions: ['', '.js', '.jsx']
+    }
+};
+
+var uglify = [new webpack.optimize.UglifyJsPlugin({
+    minimize: true,
+    output: { comments: false }
+})];
 
 
 /*
@@ -94,7 +115,7 @@ gulp.task('scripts-external', function() {
             .pipe(eslint.format());
     }
         
-    data = data.pipe(webpack(require(PATH.wpExternal)));
+    data = data.pipe(wpStream(require(PATH.wpExternal)));
 
     if(argv.min !== undefined) {
         data = data.pipe(uglify())
@@ -119,15 +140,15 @@ gulp.task('scripts-internal', function() {
         data = data.pipe(eslint())
             .pipe(eslint.format());
     }
-        
-    data = data.pipe(webpack(require(PATH.wpInternal)));
 
     if(argv.min !== undefined) {
-        data = data.pipe(uglify())
-            .pipe(rename({extname: '.min.js'}));
+        wpInternal.plugins = uglify;
+        wpInternal.output.filename = './asset/js/bundle.min.js';
+        wpInternal.devtool = 'source-map';
     }
 
-    return data.pipe(gulp.dest(PATH.root));
+    return data.pipe(wpStream(wpInternal))
+        .pipe(gulp.dest(PATH.root));
 });
 
 
@@ -190,7 +211,7 @@ gulp.task('scripts-external-prod', function() {
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError())
-        .pipe(webpack(require(PATH.wpExternal)))
+        .pipe(wpStream(require(PATH.wpExternal)))
         .pipe(uglify())
         .pipe(rename({extname: '.min.js'}))
         .pipe(gulp.dest(PATH.root));
@@ -201,7 +222,7 @@ gulp.task('scripts-internal-prod', function() {
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failOnError())
-        .pipe(webpack(require(PATH.wpInternal)))
+        .pipe(wpStream(require(PATH.wpInternal)))
         .pipe(uglify())
         .pipe(rename({extname: '.min.js'}))
         .pipe(gulp.dest(PATH.root));
