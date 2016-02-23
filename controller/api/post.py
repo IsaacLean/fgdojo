@@ -28,7 +28,7 @@ class PostEndpoint(webapp2.RequestHandler):
             else:
                 self.error(404)
         else:
-            # /post: Read list of default posts
+            # /post: Read list of latest posts
             postsQuery = Post.query().fetch(25)
             posts = []
 

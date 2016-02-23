@@ -17,7 +17,7 @@ export default class PostCreate extends Component {
         evt.preventDefault();
 
         let data = util.getFormData('#post-create-form');
-        data.board = this.props.board; // TODO: set board to board ID
+        data.board = this.props.board;
 
         $.post(
             '/api/post',

@@ -14,8 +14,16 @@ export default class Boards extends Component {
     render() {
         let comp;
 
-        if(this.props.params.name) {
-            comp = <Board name={this.props.params.name} query={this.props.location.query} router={this.context.router} />;
+        if(this.props.params.board_name) {
+            comp = <Board
+                query={this.props.location.query}
+                name={this.props.params.board_name}
+                post={{
+                    post_id: this.props.params.post_id,
+                    post_name: this.props.params.post_name
+                }}
+                router={this.context.router}
+            />;
         } else {
             let { query } = this.props.location;
 

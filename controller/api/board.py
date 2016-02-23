@@ -25,14 +25,13 @@ class BoardEndpoint(webapp2.RequestHandler):
 
                     if(queryType == 'new'):
                         # show new posts in board
-                        postsQuery = Post.query(Post.board == name).fetch(25)
+                        postsQuery = Post.query(Post.board == name).order(-Post.created).fetch(25)
                         posts = []
 
                         for post in postsQuery:
                             posts.append({
                                 'id': post.key.id(),
                                 'title': post.title,
-                                'content': post.content,
                                 'author': post.author,
                                 'board': post.board,
                                 'created': str(post.created),
@@ -94,8 +93,6 @@ class BoardEndpoint(webapp2.RequestHandler):
                     admins = [creator]
                     newBoard = Board(name=name, desc=desc, admins=admins)
                     newBoard.put()
-
-                    # TODO: redirect to board URL
                 else:
                     self.error(409)
             else:

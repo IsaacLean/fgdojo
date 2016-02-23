@@ -30,21 +30,24 @@ export default class Board extends Component {
             boardDesc = this.state.boardData.desc;
         }
 
-        if(this.props.query.show === 'new_post') {
+        if(this.props.post.post_id && this.props.post.post_name) {
+            // TODO: request post & render here
+            comp = <div>i'm supposed to be the post</div>;
+        } else if(this.props.query.show === 'new_post') {
             comp = <PostCreate board={this.props.name} />;
         } else {
             comp = <PostsList board={this.props.name} />;
         }
 
-        let url = '/b/' + this.props.name;
+        let boardUrl = '/b/' + this.props.name;
 
         return <div id="board">
             <div className="card-header">
-                <Link to={url}>
+                <Link to={boardUrl}>
                     {this.props.name}
                 </Link>
                 <i>{boardDesc}</i>
-                <Link to={ {pathname: url, query: { show: 'new_post' }} } className="btn btn-success btn-sm pull-xs-right">
+                <Link to={ {pathname: boardUrl, query: { show: 'new_post' }} } className="btn btn-success btn-sm pull-xs-right">
                     Create new post
                 </Link>
             </div>

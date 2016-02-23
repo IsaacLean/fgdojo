@@ -11,6 +11,7 @@ from controller.api.logout import LogoutHandler
 from controller.api.board import BoardEndpoint
 from controller.api.post import PostEndpoint
 
+
 app = webapp2.WSGIApplication([
     ('/api/user', UserEndpoint),
     ('/api/user/([0-9]+)', UserEndpoint),
