@@ -2,7 +2,6 @@ import json
 import webapp2
 
 from auth import getSecureUser
-from env import JINJA_ENV
 from model.post import Post
 
 
@@ -30,11 +29,11 @@ class PostEndpoint(webapp2.RequestHandler):
                 self.error(404)
         else:
             # /post: Read list of default posts
-            postsQuery = Post.query().fetch(10)
+            postsQuery = Post.query().fetch(25)
             posts = []
 
             for post in postsQuery:
-                postData = {
+                posts.append({
                     'id': post.key.id(),
                     'title': post.title,
                     'content': post.content,
@@ -42,8 +41,7 @@ class PostEndpoint(webapp2.RequestHandler):
                     'board': post.board,
                     'created': str(post.created),
                     'modified': str(post.modified)
-                }
-                posts.append(postData)
+                })
 
             response = {
                 'posts': posts

@@ -2,8 +2,8 @@ import json
 import webapp2
 
 from auth import getSecureUser
-from env import JINJA_ENV
 from model.board import Board
+from model.post import Post
 
 
 # /board
@@ -15,27 +15,61 @@ class BoardEndpoint(webapp2.RequestHandler):
             board = Board.query(Board.name == name).get()
 
             if board is not None:
-                response = {
-                    'name': board.name,
-                    'desc': board.desc,
-                    'admins': board.admins
-                }
+                queryString = self.request.GET.getall('post')
 
-                self.response.write(json.dumps(response))
+                queryType = None
+
+                if(len(queryString) > 0):
+                    # query string received
+                    queryType = queryString[0]
+
+                    if(queryType == 'new'):
+                        # show new posts in board
+                        postsQuery = Post.query(Post.board == name).fetch(25)
+                        posts = []
+
+                        for post in postsQuery:
+                            posts.append({
+                                'id': post.key.id(),
+                                'title': post.title,
+                                'content': post.content,
+                                'author': post.author,
+                                'board': post.board,
+                                'created': str(post.created),
+                                'modified': str(post.modified)
+                            })
+
+                        response = {
+                            'posts': posts
+                        }
+
+                        self.response.write(json.dumps(response))
+                    else:
+                        # invalid query string received
+                        self.error(404)
+                else:
+                    # no query string received
+                    response = {
+                        'name': board.name,
+                        'desc': board.desc,
+                        'admins': board.admins,
+                    }
+
+                    self.response.write(json.dumps(response))
             else:
+                # board doesn't exist
                 self.error(404)
         else:
             # /board: Read list of default boards
-            boardsQuery = Board.query().fetch(10)
+            boardsQuery = Board.query().fetch(25)
             boards = []
 
             for board in boardsQuery:
-                boardData = {
+                boards.append({
                     'name': board.name,
                     'desc': board.desc,
                     'admins': board.admins
-                }
-                boards.append(boardData)
+                })
 
             response = {
                 'boards': boards

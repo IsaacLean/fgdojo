@@ -9,17 +9,20 @@ export default class PostsList extends Component {
 
         this.state = { postsData: null };
 
-        document.title = 'FG Dojo: Posts';
-
-        $.get('/api/post', function(data) {
+        $.get('/api/board/' + this.props.board + '?post=new', function(data) {
             this.setState({ postsData: JSON.parse(data).posts});
-        }.bind(this));
+        }.bind(this))
+            .fail(function() {
+                // TODO: make better error handling
+                console.error('router');
+            });
+        
     }
 
     render() {
         let postNodes;
 
-        if(this.state.postsData === null) {
+        if(this.state.postsData === null || this.state.postsData.length === 0) {
             postNodes = <li className="list-group-item">
                 There are currently no posts in this board.
             </li>;
