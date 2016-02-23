@@ -9,45 +9,53 @@ from model.post import Post
 # /post
 class PostEndpoint(webapp2.RequestHandler):
     # Read post
-    # def get(self, name=None):
-    #     if name is not None:
-    #         # /board/{name}: Read data for specific board
-    #         board = Board.query(Board.name == name).get()
+    def get(self, id=None):
+        if id is not None:
+            # /post/{id}: Read data for specific post
+            post = Post.get_by_id(int(id))
 
-    #         if board is not None:
-    #             response = {
-    #                 'name': board.name,
-    #                 'desc': board.desc,
-    #                 'admins': board.admins
-    #             }
+            if post is not None:
+                response = {
+                    'id': post.key.id(),
+                    'title': post.title,
+                    'content': post.content,
+                    'author': post.author,
+                    'board': post.board,
+                    'created': str(post.created),
+                    'modified': str(post.modified)
+                }
 
-    #             self.response.write(json.dumps(response))
-    #         else:
-    #             self.error(404)
-    #     else:
-    #         # /board: Read list of default boards
-    #         boardsQuery = Board.query().fetch(10)
-    #         boards = []
+                self.response.write(json.dumps(response))
+            else:
+                self.error(404)
+        else:
+            # /post: Read list of default posts
+            postsQuery = Post.query().fetch(10)
+            posts = []
 
-    #         for board in boardsQuery:
-    #             boardData = {
-    #                 'name': board.name,
-    #                 'desc': board.desc,
-    #                 'admins': board.admins
-    #             }
-    #             boards.append(boardData)
+            for post in postsQuery:
+                postData = {
+                    'id': post.key.id(),
+                    'title': post.title,
+                    'content': post.content,
+                    'author': post.author,
+                    'board': post.board,
+                    'created': str(post.created),
+                    'modified': str(post.modified)
+                }
+                posts.append(postData)
 
-    #         response = {
-    #             'boards': boards
-    #         }
+            response = {
+                'posts': posts
+            }
 
-    #         self.response.write(json.dumps(response))
+            self.response.write(json.dumps(response))
 
     # Create new post
     def post(self):
         title = self.request.get('title')
         content = self.request.get('content')
-        board = int(self.request.get('board'))
+        board = self.request.get('board')
 
         if title == '':
             self.error(400)

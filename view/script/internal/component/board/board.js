@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import PostCreate from './post_create';
+import PostsList from './posts_list';
 
 
 export default class Board extends Component {
@@ -30,9 +31,9 @@ export default class Board extends Component {
         }
 
         if(this.props.query.show === 'new_post') {
-            comp = <PostCreate />;
+            comp = <PostCreate board={this.props.name} />;
         } else {
-            comp = <div>i'm the post list</div>;
+            comp = <PostsList board={this.props.name} />;
         }
 
         let url = '/b/' + this.props.name;

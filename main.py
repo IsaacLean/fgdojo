@@ -22,5 +22,6 @@ app = webapp2.WSGIApplication([
     ('/api/board', BoardEndpoint),
     ('/api/board/(\w+)', BoardEndpoint),
     ('/api/post', PostEndpoint),
+    ('/api/post/(\d+)', PostEndpoint),
     ('/.*', GuestHandler)
 ], debug=True)
