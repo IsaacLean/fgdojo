@@ -16,7 +16,7 @@ export default class App extends Component {
                             <Link to="/b" className="nav-link">Boards</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Events</a>
+                            <a href="#" className="nav-link">Events</a>
                         </li>
                     </ul>
                     <ul className="nav navbar-nav pull-xs-right">
