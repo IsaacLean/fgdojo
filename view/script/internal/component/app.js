@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createStore } from 'redux';
 import { Link } from 'react-router';
 
-import UserDropdown from './user_dropdown';
+import UserDropdown from '../container/user_dropdown';
 
 
 export default class App extends Component {
