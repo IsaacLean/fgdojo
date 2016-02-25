@@ -8,3 +8,6 @@ ReactDOM.render(
     <Router history={browserHistory} routes={routes} />,
     document.getElementById('app')
 );
+
+// TODO: stop importing jQuery twice... lol
+// TODO: import Bootstrap JS & Tether through webpack

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { createStore } from 'redux';
 import { Link } from 'react-router';
+
+import UserDropdown from './user_dropdown';
 
 
 export default class App extends Component {
@@ -19,11 +22,7 @@ export default class App extends Component {
                             <a href="#" className="nav-link">Events</a>
                         </li>
                     </ul>
-                    <ul className="nav navbar-nav pull-xs-right">
-                        <li className="nav-item">
-                            <a href="/api/logout" className="nav-link">Logout</a>
-                        </li>
-                    </ul>
+                    <UserDropdown />
                 </div>
             </nav>
             <div id="content" className="container">

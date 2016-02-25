@@ -8,7 +8,7 @@ class GuestHandler(webapp2.RequestHandler):
     def get(self):
         if verifySecureSession(self.request):
             # User is logged in
-            template = JINJA_ENV.get_template('feed.html')
+            template = JINJA_ENV.get_template('app.html')
             self.response.write(template.render())
         else:
             # User is guest
