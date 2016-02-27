@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { createStore } from 'redux';
+import { fetchUser, clickTag } from '../action/actions';
 import { Link } from 'react-router';
 
 import UserDropdown from '../container/user_dropdown';
 
 
-export default class App extends Component {
+class App extends Component {
+    constructor(props) {
+        super(props);
+
+        props.fetchUser();
+    }
+
     render() {
         return <div id="app">
             <nav className="navbar navbar-dark bg-inverse navbar-fixed-top">
@@ -22,7 +31,7 @@ export default class App extends Component {
                             <a href="#" className="nav-link">Events</a>
                         </li>
                     </ul>
-                    <UserDropdown />
+                    <UserDropdown clickTag={this.props.clickTag} />
                 </div>
             </nav>
             <div id="content" className="container">
@@ -33,3 +42,15 @@ export default class App extends Component {
         </div>;
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        user: state.user
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ fetchUser: fetchUser, clickTag: clickTag }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

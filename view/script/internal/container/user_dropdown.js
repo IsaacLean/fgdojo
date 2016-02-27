@@ -1,23 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 
-const UserDropdown = (props) => <div className="dropdown pull-xs-right">
-    <button className="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
-        {props.user.tag}
+export default (props) => <div className="dropdown pull-xs-right">
+    <button
+        className="btn btn-secondary dropdown-toggle"
+        data-toggle="dropdown"
+        onClick={props.clickTag}
+        type="button"
+    >
+        Lean
     </button>
     <div className="dropdown-menu">
-        <a href="#" className="dropdown-item">Profile</a>
-        <a href="#" className="dropdown-item">Settings</a>
-        <a href="/api/logout" className="dropdown-item">Logout</a>
+        <a className="dropdown-item" href="#">Profile</a>
+        <a className="dropdown-item" href="#" >Settings</a>
+        <a className="dropdown-item" href="/api/logout">Logout</a>
     </div>
 </div>;
-
-function mapStateToProps(state) {
-    return {
-        user: state.user
-    };
-}
-
-export default connect(mapStateToProps)(UserDropdown);
-
